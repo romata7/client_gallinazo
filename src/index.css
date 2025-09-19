@@ -1,0 +1,10 @@
+.div-icon-container {
+  display: flex; /* Usar Flexbox para centrar */  
+  align-items: center; /* Centrar verticalmente */
+  height: 38px; /* Altura del contenedor */
+}
+.icon {
+  cursor: pointer; /* Cambiar cursor a puntero */
+  font-size: 1.6rem; /* Tamaño de fuente */
+  margin: 0.0rem; /* Margen a la izquierda */
+}
