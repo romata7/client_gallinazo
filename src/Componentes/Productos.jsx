@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
-import { Modal, Button, FloatingLabel, Form } from "react-bootstrap";
+import { Modal, Button, FloatingLabel, Form, ListGroup } from "react-bootstrap";
 import moment from "moment";
 import { ArrowDown, ArrowUp, Pencil, Trash } from "react-bootstrap-icons";
 
@@ -13,78 +13,33 @@ const vacio = {
 function Productos() {
   const [showEditProduct, setShowEditProduct] = useState(false);
   const [showDeleteProduct, setShowDeleteProduct] = useState(false);
+
   const [data, setData] = useState(vacio);
-  const [p_p, setP_p] = useState({
-    id: 0,
-    producto: "",
-    costo: 0,
-  });
-  const [p_aux, setP_aux] = useState({
-    id: 0,
-    producto: "",
-    costo: 0,
-  });
   const [productos, setProductos] = useState([]);
-  const [allProducts, setAllProducts] = useState([]);
+  const [productos_historial, setProductos_historial] = useState([]);
 
   const fetchProductos = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/productos/`);
-      setProductos(response.data);
+      setProductos(response.data.productos);
+      setProductos_historial(response.data.productos_historial);
     } catch (error) {
       console.error(error);
     }
   };
-  const fetchAllProductos = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/productos/all`);
-      setAllProducts(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const fetchLastID = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/productos/last_id`);
-      setP_p((prev) => ({
-        ...prev,
-        id_reg_producto: response.data.last_id + 1,
-      }));
-    } catch (error) {
-      console.error("Error al obtener last_id_reg_product", error);
-    }
-  };
-  useEffect(() => {
-    fetchLastID();
-    fetchProductos();
-    fetchAllProductos();
-  }, []);
 
   const agregarProducto = async () => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/productos`,  data )
+      const response = await axios.post(`${API_BASE_URL}/api/productos`, data)
+      console.log(response.data);
     } catch (error) {
-
+      console.error(error);
     }
-    // try {
-    //   const response = await axios.post(
-    //     `${API_BASE_URL}/api/productos/agregar`,
-    //     {
-    //       producto: p_p,
-    //     }
-    //   );
-    //   setP_p({ id_reg_producto: 0, producto: "", costo: 0 });
-    //   fetchLastID();
-    //   fetchProductos();
-    //   fetchAllProductos();
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
 
   useEffect(() => {
-    //
-  }, [p_p]);
+    fetchProductos();
+  }, [data])
 
   const handleOpenEdit = (pp) => {
     setP_aux(pp);
@@ -105,9 +60,7 @@ function Productos() {
       );
       setP_p({ id_reg_producto: 0, producto: "", costo: 0 });
       setP_aux({ id_reg_producto: 0, producto: "", costo: 0 });
-      fetchLastID();
       fetchProductos();
-      fetchAllProductos();
     } catch (error) {
       console.error(error);
     }
@@ -132,9 +85,7 @@ function Productos() {
       );
       setP_p({ id_reg_producto: 0, producto: "", costo: 0 });
       setP_aux({ id_reg_producto: 0, producto: "", costo: 0 });
-      fetchLastID();
       fetchProductos();
-      fetchAllProductos();
     } catch (error) {
       console.error(error);
     }
@@ -204,6 +155,62 @@ function Productos() {
               )}
             </div>
           </div>
+          {productos.length > 0 && (
+            <ListGroup>
+              {productos.map((item) => (
+                <ListGroup.Item key={item.id}
+                  className="d-flex gap-2"
+                >
+                  <div className="d-flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline-primary"
+                      onClick={() => subirOrden(p)}
+                    >
+                      <ArrowUp />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline-secondary"
+                      onClick={() => bajarOrden(p)}
+                    >
+                      <ArrowDown />
+                    </Button>
+                  </div>
+                  <div className="d-flex flex-grow-1">
+                    <div className="d-flex gap-2">
+                      <div>
+                        {item.orden}
+                      </div>
+                      <div className="flex-grow-1">
+                        {item.producto}
+                      </div>
+                      <div>
+                        {item.costo}
+                      </div>
+                    </div>
+
+                  </div>
+                  <div className="d-flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="warning"
+                      onClick={() => handleOpenEdit(p)}
+                    >
+                      <Pencil />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => handleOpenDelete(p)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          )}
           <div className="col-12 col-sm-12 col-md-8 col-lg-9 col-xl-9 col-xxl-10">
             <table className="table table-sm">
               <thead className="table-dark">
@@ -284,7 +291,7 @@ function Productos() {
                 </tr>
               </thead>
               <tbody>
-                {allProducts.map((p) => (
+                {productos_historial.map((p) => (
                   <tr key={p.id_reg_producto}>
                     <td className="fw-bold">
                       {p.origen === 0 ? (
