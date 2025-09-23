@@ -7,6 +7,12 @@ const variant = {
     "Eliminar": "danger"
 }
 
+const icon = {
+    "Registrar": `📋`,
+    "Modificar": `✍`,
+    "Eliminar": `❌`
+}
+
 const DEFAULT_DATA = {
     producto: "",
     costo: ""
@@ -34,7 +40,7 @@ export const ModalProductos = ({
     return (
         <Modal show={show} onHide={handleClose} size="sm">
             <Modal.Header closeButton>
-                <Modal.Title>{operation} Producto</Modal.Title>
+                <Modal.Title>{icon[operation]} {operation} Producto</Modal.Title>
             </Modal.Header>
             <fieldset disabled={operation === "Eliminar"}>
                 <Modal.Body
@@ -64,6 +70,7 @@ export const ModalProductos = ({
             </fieldset>
             <Modal.Footer>
                 <Button
+                    size="sm"
                     variant="secondary"
                     onClick={handleClose}
                 >
@@ -72,6 +79,7 @@ export const ModalProductos = ({
                 {operation === "Registrar" || operation === "Modificar"
                     ? data.producto !== "" && data.costo > 0 && (
                         <Button
+                            size="sm"
                             variant={variant[operation]}
                             onClick={() => handleSubmit(data)}
                         >
@@ -79,6 +87,7 @@ export const ModalProductos = ({
                         </Button>
                     )
                     : <Button
+                        size="sm"
                         variant={variant[operation]}
                         onClick={() => handleSubmit(data)}
                     >

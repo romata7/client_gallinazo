@@ -151,7 +151,7 @@ function Productos() {
           <div className="bg-light rounded p-3 small">
             {productos_historial.map((producto_h) => (
               <div key={producto_h.id} className="font-monospace">
-                <span className="text-muted">
+                <span className="text-muted small">
                   [{new Date(producto_h.fecha).toLocaleString()}]
                 </span>
                 <span>
