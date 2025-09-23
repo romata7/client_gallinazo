@@ -32,7 +32,7 @@ export const ModalProductos = ({
         }
     }, [show, initialData])
     return (
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} size="sm">
             <Modal.Header closeButton>
                 <Modal.Title>{operation} Producto</Modal.Title>
             </Modal.Header>

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
-import { Modal, Button, FloatingLabel, Form, ListGroup, Badge } from "react-bootstrap";
+import { Modal, Button, FloatingLabel, Form, ListGroup, Badge, Row, Col, Card } from "react-bootstrap";
 import moment from "moment";
 import { ArrowDown, ArrowUp, Pencil, Plus, Trash } from "react-bootstrap-icons";
 import { ModalProductos } from "./productos/ModalProductos";
@@ -75,11 +75,11 @@ function Productos() {
           response = await axios.post(`${API_BASE_URL}/api/productos`, modalData)
           break;
         case "Modificar":
-          id = modalData;
+          id = modalData.id;
           response = await axios.put(`${API_BASE_URL}/api/productos/${id}`, modalData)
           break;
         case "Eliminar":
-          id = modalData;
+          id = modalData.id;
           response = await axios.delete(`${API_BASE_URL}/api/productos/${id}`, modalData)
           break;
 
@@ -98,76 +98,86 @@ function Productos() {
 
   return (
     <div>
-      <div
-        className="d-flex justify-content-center align-items-center my-2"
-      >
+      <div className="d-flex justify-content-center align-items-center my-2">
         <Button
           onClick={() => handelOpenModal("Registrar")}
           size="sm"
+          variant="success"
+          className="d-flex align-items-center gap-1"
         >
-          <Plus /> Agregar Producto
+          <span>+</span> Agregar Producto
         </Button>
       </div>
       {productos.length > 0 && (
-        <ListGroup>
-          {productos.map((item) => (
-            <ListGroup.Item key={item.id}
-              className="d-flex gap-2"
-            >
-              <div className="d-flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline-primary"
-                  onClick={() => subirOrden(p)}
-                >
-                  <ArrowUp />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline-secondary"
-                  onClick={() => bajarOrden(p)}
-                >
-                  <ArrowDown />
-                </Button>
-              </div>
-              <div className="flex-grow-1">
-                <div>
-                  <div className="d-flex gap-2">
-                    <div>
-                      {item.orden}
-                    </div>
-                    <div className="flex-grow-1">
-                      {item.producto}
-                    </div>
-                    <div>
-                      <Badge>
-                        S/ {parseFloat(item.costo).toFixed(2)}
-                      </Badge>
-                    </div>
-                  </div>
+        <div className="mt-4">
+          <h6 className="text-muted mb-2">PRODUCTOS ACTIVOS</h6>
+          <div className="bg-light rounded p-3 small font-monospace">
+            {productos.map((item) => (
+              <div key={item.id} className="d-flex align-items-center justify-content-between py-1">
+                {/* Flechas a la izquierda */}
+                <div className="d-flex gap-1 me-2">
+                  <Button size="sm" variant="outline-primary" onClick={() => subirOrden(item)} className="px-1 py-0" title="Subir orden">
+                    ↑
+                  </Button>
+                  <Button size="sm" variant="outline-secondary" onClick={() => bajarOrden(item)} className="px-1 py-0" title="Bajar orden">
+                    ↓
+                  </Button>
                 </div>
 
+                {/* Información del producto */}
+                <div className="d-flex align-items-center gap-3 flex-grow-1">
+                  <span className="text-primary">#{item.id}</span>
+                  <span>{item.producto}</span>
+                  <span className="text-success">S/ {parseFloat(item.costo).toFixed(2)}</span>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="d-flex gap-1">
+                  <Button size="sm" variant="outline-warning" onClick={() => handelOpenModal("Modificar", item)} className="px-1 py-0" title="Modificar">
+                    ✎
+                  </Button>
+                  <Button size="sm" variant="outline-danger" onClick={() => handelOpenModal("Eliminar", item)} className="px-1 py-0" title="Eliminar">
+                    ×
+                  </Button>
+                </div>
               </div>
-              <div className="d-flex gap-2">
-                <Button
-                  size="sm"
-                  variant="warning"
-                  onClick={() => handelOpenModal("Modificar", item)}
-                >
-                  <Pencil />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => handelOpenModal("Eliminar", item)}
-                >
-                  <Trash />
-                </Button>
-              </div>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+            ))}
+          </div>
+        </div>
       )}
+      {productos_historial.length > 0 && (
+        <div className="mt-4">
+          <h6 className="text-muted mb-2">HISTORIAL DE CAMBIOS</h6>
+          <div className="bg-light rounded p-3 small">
+            {productos_historial.map((producto_h) => (
+              <div key={producto_h.id} className="font-monospace">
+                <span className="text-muted">
+                  [{new Date(producto_h.fecha).toLocaleString()}]
+                </span>
+                <span>
+                  {" "} ID: <b>#{producto_h.id_producto}</b>
+                </span>
+                <span
+                  className={producto_h.operacion === "AGREGADO"
+                    ? 'text-success'
+                    : producto_h.operacion === "MODIFICADO"
+                      ? 'text-warning'
+                      : 'text-danger'
+                  }
+                >
+                  {" "}{producto_h.operacion}
+                </span>
+                <span> - {producto_h.producto} </span>
+                <span className="text-primary"> - S/{producto_h.costo}</span>
+                {producto_h.orden && (
+                  <span className="text-muted"> - Orden:{producto_h.orden}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <ModalProductos
         show={modalState.show}
         operation={modalState.operation}
