@@ -1,18 +1,14 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
-import { Button, Card } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { ModalProductos } from "./productos/ModalProductos";
 import { useGlobalContext } from "../Contexts/GlobalContext";
 import {
   format,
-  startOfDay,
-  endOfDay,
-  startOfMonth,
-  endOfMonth,
-  isWithinInterval,
   parseISO
 } from 'date-fns';
+import { Fechas } from "./fechas/Fechas";
 
 const DEFAULT_PRODUCT_DATA = {
   producto: "",
@@ -35,87 +31,14 @@ const text = {
   "BAJA": '↓',
 }
 
-// Componente minimalista para filtros
-const FiltrosFecha = ({ fechaInicio, fechaFin, onFechasChange }) => {
-  const [fi, setFi] = useState(startOfDay(new Date()).toLocaleDateString());
-  const [ff, setFf] = useState(startOfDay(new Date()));
-  console.log(startOfDay(new Date()), endOfDay(new Date()))
-  return (
-    <div className="d-flex flex-wrap gap-2 align-items-center mb-3 p-2 bg-light rounded small">
-      <span className="text-muted">Filtrar:</span>
-      <Button size="sm" variant="outline-dark" onClick={() => {
-        onFechasChange(startOfDay(new Date()), endOfDay(new Date()));
-      }}>
-        Hoy
-      </Button>
-      <Button size="sm" variant="outline-dark" onClick={() => {
-        onFechasChange(startOfMonth(new Date()), endOfMonth(new Date()));
-      }}>
-        Mes
-      </Button>
-      <Button size="sm" variant="outline-dark" onClick={() => {
-        onFechasChange(null, null);
-      }}>
-        Todo
-      </Button>
-
-      <div className="d-flex gap-1 align-items-center">
-        <input
-          type="date"
-          className="form-control form-control-sm"
-          style={{ width: '120px' }}
-          value={fechaInicio ? format(fechaInicio, 'yyyy-MM-dd') : ''}
-          onChange={(e) => {
-            const nuevaFecha = e.target.value ? new Date(e.target.value) : null;
-            onFechasChange(nuevaFecha, fechaFin);
-          }}
-        />
-        <span className="text-muted">-</span>
-        <input
-          type="date"
-          className="form-control form-control-sm"
-          style={{ width: '120px' }}
-          value={fechaFin ? format(fechaFin, 'yyyy-MM-dd') : ''}
-          onChange={(e) => {
-            const nuevaFecha = e.target.value ? new Date(e.target.value) : null;
-            onFechasChange(fechaInicio, nuevaFecha);
-          }}
-        />
-      </div>
-    </div>
-  );
-};
-
 function Productos() {
   const { productos, productos_historial } = useGlobalContext();
-  const [fechaInicio, setFechaInicio] = useState(startOfMonth(new Date()));
-  const [fechaFin, setFechaFin] = useState(endOfMonth(new Date()));
 
   const [modalState, setModalState] = useState({
     show: false,
     operation: 'Registrar',
     initialData: DEFAULT_PRODUCT_DATA
   });
-
-  // Filtrar historial por fechas
-  const historialFiltrado = useMemo(() => {
-    if (!fechaInicio || !fechaFin) {
-      return productos_historial; // Mostrar todo si no hay filtros
-    }
-
-    return productos_historial.filter(item => {
-      const fechaItem = parseISO(item.fecha);
-      return isWithinInterval(fechaItem, {
-        start: fechaInicio,
-        end: fechaFin
-      });
-    });
-  }, [productos_historial, fechaInicio, fechaFin]);
-
-  const handleFechasChange = (inicio, fin) => {
-    setFechaInicio(inicio);
-    setFechaFin(fin);
-  };
 
   const subirOrden = async (item) => {
     try {
@@ -172,8 +95,17 @@ function Productos() {
     }
   }, [modalState.operation, handelCloseModal]);
 
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+  };
+
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+  };
+
   return (
     <div>
+      <Fechas />
       {/* Botón Agregar */}
       <div className="d-flex justify-content-center align-items-center my-3">
         <Button
@@ -253,21 +185,14 @@ function Productos() {
         <div>
           <div className="d-flex justify-content-between align-items-center mb-2">
             <h6 className="text-muted mb-0">
-              HISTORIAL ({historialFiltrado.length} de {productos_historial.length})
+              HISTORIAL  {productos_historial.length}
             </h6>
           </div>
 
-          {/* Filtros minimalistas */}
-          <FiltrosFecha
-            fechaInicio={fechaInicio}
-            fechaFin={fechaFin}
-            onFechasChange={handleFechasChange}
-          />
-
           <div className="bg-light rounded p-3 small font-monospace">
-            {historialFiltrado.map((producto_h) => (
+            {productos_historial.map((producto_h) => (
               <div key={producto_h.id} className="d-flex align-items-start py-1 border-bottom border-light">
-                <span className="text-muted me-3" style={{ minWidth: '140px' }}>
+                <span className="text-muted me-2">
                   [{format(parseISO(producto_h.fecha), 'dd/MM HH:mm')}]
                 </span>
 
@@ -295,7 +220,7 @@ function Productos() {
               </div>
             ))}
 
-            {historialFiltrado.length === 0 && (
+            {productos_historial.length === 0 && (
               <div className="text-center py-2 text-muted">
                 No hay registros para el período seleccionado
               </div>
