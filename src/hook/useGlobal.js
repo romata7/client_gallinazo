@@ -50,5 +50,6 @@ export const useGlobal = () => {
         printDuplex,
         productos,
         productos_historial,
+        setProductos_historial,
     };
 };

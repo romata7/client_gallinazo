@@ -32,7 +32,7 @@ const text = {
 }
 
 function Productos() {
-  const { productos, productos_historial } = useGlobalContext();
+  const { productos, productos_historial, setProductos_historial } = useGlobalContext();
 
   const [modalState, setModalState] = useState({
     show: false,
@@ -103,9 +103,22 @@ function Productos() {
     setEndDate(e.target.value);
   };
 
+  const procesar = async (fi, ff) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/productos/xfechas`, {
+        params: {
+          fi: fi,
+          ff: ff
+        }
+      });
+      setProductos_historial(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div>
-      <Fechas />
       {/* Botón Agregar */}
       <div className="d-flex justify-content-center align-items-center my-3">
         <Button
@@ -181,14 +194,14 @@ function Productos() {
       )}
 
       {/* Historial de Cambios - Estilo Log Mejorado */}
+      <div className="d-flex justify-content-between align-items-center mb-2">
+        <h6 className="text-muted mb-0">
+          HISTORIAL  {productos_historial.length}
+        </h6>
+      </div>
+      <Fechas procesar={procesar} />
       {productos_historial.length > 0 && (
         <div>
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <h6 className="text-muted mb-0">
-              HISTORIAL  {productos_historial.length}
-            </h6>
-          </div>
-
           <div className="bg-light rounded p-3 small font-monospace">
             {productos_historial.map((producto_h) => (
               <div key={producto_h.id} className="d-flex align-items-start py-1 border-bottom border-light">
