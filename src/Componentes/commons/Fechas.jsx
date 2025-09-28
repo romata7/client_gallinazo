@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import { endOfMonth, format, parseISO, startOfMonth } from "date-fns";
 
 export const Fechas = ({ fi = new Date(), ff = new Date(), procesar }) => {
@@ -28,6 +28,7 @@ export const Fechas = ({ fi = new Date(), ff = new Date(), procesar }) => {
         setEndDate(hoy);
         procesar(hoy, hoy);
     }
+
     const esteMes = () => {
         const inicioMes = format(startOfMonth(new Date()), 'yyyy-MM-dd');
         const finMes = format(endOfMonth(new Date()), 'yyyy-MM-dd')
@@ -35,32 +36,35 @@ export const Fechas = ({ fi = new Date(), ff = new Date(), procesar }) => {
         setEndDate(finMes);
         procesar(inicioMes, finMes);
     }
+
     return (
-        <div className="d-flex gap-2">
-            <Button
-                size="sm"
-                onClick={esteDia}
-            >
-                Hoy
-            </Button>
-            <Button
-                size="sm"
-                onClick={esteMes}
-            >
-                Mes
-            </Button>
-            <Form.Control
-                type="date"
-                value={startDate}
-                style={{ width: '150px' }}
-                onChange={handleStartDateChange}
-            />
-            <Form.Control
-                type="date"
-                value={endDate}
-                style={{ width: '150px' }}
-                onChange={handleEndDateChange}
-            />
+        <div className="d-flex align-items-center gap-3 flex-wrap">
+            <div className="d-flex gap-2">
+                <Button size="sm" variant="outline-primary" onClick={esteDia}>
+                    Hoy
+                </Button>
+                <Button size="sm" variant="outline-secondary" onClick={esteMes}>
+                    Este Mes
+                </Button>
+            </div>
+            
+            <InputGroup size="sm" style={{ width: '170px' }}>
+                <InputGroup.Text>Desde</InputGroup.Text>
+                <Form.Control
+                    type="date"
+                    value={startDate}
+                    onChange={handleStartDateChange}
+                />
+            </InputGroup>
+            
+            <InputGroup size="sm" style={{ width: '170px' }}>
+                <InputGroup.Text>Hasta</InputGroup.Text>
+                <Form.Control
+                    type="date"
+                    value={endDate}
+                    onChange={handleEndDateChange}
+                />
+            </InputGroup>
         </div>
     );
 };

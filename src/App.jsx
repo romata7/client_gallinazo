@@ -4,7 +4,7 @@ import Navbar from "./Componentes/Navbar";
 import AgregarComanda from "./Componentes/AgregarComanda";
 import Todas_las_comandas from "./Componentes/Todas_las_comandas";
 import ComandasActivas from "./Componentes/ComandasActivas";
-import Productos from "./Componentes/Productos";
+import Productos from "./Componentes/productos/Productos";
 import Mesas from "./Componentes/Mesas";
 import Mozos from "./Componentes/Mozos";
 import Clientes from "./Componentes/Clientes";
