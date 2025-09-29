@@ -22,22 +22,6 @@ export const useGlobal = () => {
         }
     };
 
-    const subirProducto = async (item) => {
-        try {
-            await axios.post(`${API_BASE_URL}/api/productos/subir`, { item });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const bajarProducto = async (item) => {
-        try {
-            await axios.post(`${API_BASE_URL}/api/productos/bajar`, { item });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     useEffect(() => {
         // Connectar Socket.IO
         const newSocket = io(API_BASE_URL);
@@ -49,6 +33,7 @@ export const useGlobal = () => {
         newSocket.on('productos-actualizados', data => {
             setProductos(data.productos);
             setProductos_historial(data.productos_historial);
+            console.log('se hizo la actualización en frontend');
         });
 
         return () => {
@@ -67,7 +52,5 @@ export const useGlobal = () => {
         productos,
         productos_historial,
         setProductos_historial,
-        subirProducto,
-        bajarProducto,
     };
 };

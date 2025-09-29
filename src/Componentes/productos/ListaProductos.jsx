@@ -1,41 +1,34 @@
 import { Alert, Button, Table } from "react-bootstrap"
-import { useGlobalContext } from "../../Contexts/GlobalContext"
 
-export const List = ({
-    list = [],
-    headers = ['orden', 'producto', 'costo'],
+export const ListaProductos = ({
+    lista = [],
     subir,
     bajar,
-    abrirModal
+    modificar,
+    eliminar,
 }) => {
-    const { subirProducto, bajarProducto } = useGlobalContext();
     return (
-        <div
-            className="font-monospace"
-        >
-            {list.length === 0 && (
+        <div>
+            {lista.length === 0 && (
                 <Alert>
-                    Sin Datos...
+                    Sin  datos...
                 </Alert>
             )}
-            {list.length > 0 && (
+            {lista.length > 0 && (
                 <Table
-                    hover
                     borderless
-                    size="sm"
+                    hover
                     responsive="sm"
                 >
                     <tbody>
-                        {list.map(item => (
+                        {lista.map(item => (
                             <tr key={item.id}>
-                                <td
-                                    className="d-flex gap-1 justify-content-center"
-                                >
+                                {/* Subir y bajar orden */}
+                                <td className="d-flex gap-1 justify-content-center">
                                     <Button
                                         size="sm"
                                         variant="outline-primary"
                                         className="px-1 py-0"
-                                        title="Subir orden"
                                         onClick={() => subir(item)}
                                     >
                                         ↑
@@ -43,20 +36,15 @@ export const List = ({
                                     <Button
                                         size="sm"
                                         variant="outline-secondary"
-                                        title="Bajar orden"
                                         className="px-1 py-0"
                                         onClick={() => bajar(item)}
                                     >
                                         ↓
                                     </Button>
                                 </td>
-                                {headers.map(head => (
-                                    head === "orden"
-                                        ? <td className="text-primary" key={`${item.id}_${item[head]}`}>{`#${item[head]}`}</td>
-                                        : head === "costo"
-                                            ? <td className="text-success text-end" key={`${item.id}_${item[head]}`}>{`S/${parseFloat(item[head]).toFixed(2)}`}</td>
-                                            : <td key={`${item.id}_${item[head]}`}>{item[head]}</td>
-                                ))}
+                                <td className="text-primary">#{item.orden}</td>
+                                <td className="text-nowrap"> {item.producto}</td>
+                                <td className="text-end text-success">S/{parseFloat(item.costo).toFixed(2)}</td>
                                 <td
                                     className="d-flex gap-2 justify-content-center"
                                 >
@@ -64,19 +52,17 @@ export const List = ({
                                         size="sm"
                                         variant="outline-warning"
                                         className="px-1 py-0"
-                                        title="Modificar"
-                                        onClick={() => abrirModal('Modificar', 'Productos', item)}
+                                        onClick={() => modificar(item)}
                                     >
                                         ✎
                                     </Button>
                                     <Button
-                                        size="sm"
+                                        ize="sm"
                                         variant="outline-danger"
                                         className="px-1 py-0"
-                                        title="Eliminar"
-                                        onClick={() => abrirModal('Eliminar', 'Productos', item)}
+                                        onClick={() => eliminar(item)}
                                     >
-                                        ×
+                                        ✘
                                     </Button>
                                 </td>
                             </tr>

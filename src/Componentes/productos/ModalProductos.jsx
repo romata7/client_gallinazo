@@ -8,9 +8,9 @@ const variant = {
 }
 
 const icon = {
-    "Registrar": `📋`,
-    "Modificar": `✍`,
-    "Eliminar": `❌`
+    "Registrar": `✔`,
+    "Modificar": `✎`,
+    "Eliminar": `✘`
 }
 
 const DEFAULT_DATA = {
@@ -19,13 +19,13 @@ const DEFAULT_DATA = {
 }
 
 export const ModalProductos = ({
-    operation = "Registrar",
+    operation,
     show,
     handleClose,
-    initialData,
-    handleSubmit
+    initialData = DEFAULT_DATA,
+    handleData,
 }) => {
-    const [data, setData] = useState(initialData);
+    const [data, setData] = useState(initialData ? initialData : DEFAULT_DATA);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,7 +38,7 @@ export const ModalProductos = ({
         }
     }, [show, initialData])
     return (
-        <Modal show={show} onHide={handleClose} size="sm">
+        <Modal show={show} onHide={handleClose} size="sm" centered>
             <Modal.Header closeButton>
                 <Modal.Title>{icon[operation]} {operation} Producto</Modal.Title>
             </Modal.Header>
@@ -81,17 +81,17 @@ export const ModalProductos = ({
                         <Button
                             size="sm"
                             variant={variant[operation]}
-                            onClick={() => handleSubmit(data)}
+                            onClick={() => handleData(data)}
                         >
-                            {operation}
+                            {icon[operation]} {operation}
                         </Button>
                     )
                     : <Button
                         size="sm"
                         variant={variant[operation]}
-                        onClick={() => handleSubmit(data)}
+                        onClick={() => handleData(data)}
                     >
-                        {operation}
+                        {icon[operation]} {operation}
                     </Button>
                 }
             </Modal.Footer>

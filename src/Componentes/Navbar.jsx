@@ -5,7 +5,7 @@ import { useGlobalContext } from "../Contexts/GlobalContext";
 function Navbar() {
   const { shopFullName } = useGlobalContext();
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark d-print-none">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark d-print-none mb-2">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           {shopFullName}
