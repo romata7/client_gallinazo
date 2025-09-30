@@ -33,7 +33,6 @@ export const useGlobal = () => {
         newSocket.on('productos-actualizados', data => {
             setProductos(data.productos);
             setProductos_historial(data.productos_historial);
-            console.log('se hizo la actualización en frontend');
         });
 
         return () => {

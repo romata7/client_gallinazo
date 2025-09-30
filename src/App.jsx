@@ -7,13 +7,13 @@ import ComandasActivas from "./Componentes/ComandasActivas";
 import Productos from "./Componentes/productos/Productos";
 import Mesas from "./Componentes/Mesas";
 import Mozos from "./Componentes/Mozos";
-import Clientes from "./Componentes/Clientes";
 import Tipos_pago from "./Componentes/Tipos_pago";
 import Resumen from "./Componentes/Resumen";
 import Gastos from "./Componentes/Gastos";
 import ProtectedRoute from "./Componentes/ProtectedRoute";
 import DetallesCliente from "./Componentes/DetallesCliente";
 import { useGlobalContext } from "./Contexts/GlobalContext";
+import { Clientes } from "./Componentes/clientes/Clientes";
 
 function App() {
   const { password } = useGlobalContext();
