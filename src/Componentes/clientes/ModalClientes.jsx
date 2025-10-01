@@ -71,7 +71,7 @@ export const ModalClientes = ({
             await procesar[operation](data);
             handleClose();
         } catch (error) {
-            console.log(error);
+            console.error(error);
         } finally {
             setLoading(false);
         }
@@ -143,6 +143,9 @@ export const ModalClientes = ({
                             isInvalid={!!errors.phone}
                             maxLength={13}
                         />
+                        <Form.Text className="ms-2">
+                            {data.phone.length} dígitos, <b>máx: 13</b>
+                        </Form.Text>
                         <Form.Control.Feedback type="invalid">
                             {errors.phone}
                         </Form.Control.Feedback>

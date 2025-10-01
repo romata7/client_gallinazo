@@ -12,11 +12,24 @@ export const useGlobal = () => {
     const [productos, setProductos] = useState([]);
     const [productos_historial, setProductos_historial] = useState([]);
 
+    const [clientes, setClientes] = useState([]);
+    const [clientes_historial, setClientes_historial] = useState([])
+
     const fetchProductos = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/api/productos/`);
             setProductos(response.data.productos);
             setProductos_historial(response.data.productos_historial);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchClientes = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/clientes`);
+            setClientes(response.data.clientes);
+            setClientes_historial(response.data.clientes_historial);
         } catch (error) {
             console.error(error);
         }
@@ -35,6 +48,14 @@ export const useGlobal = () => {
             setProductos_historial(data.productos_historial);
         });
 
+        //Unirse a la sala de clientes
+        newSocket.emit('join-clients');
+
+        newSocket.on('clientes-actualizados', data => {
+            setClientes(data.clientes);
+            setClientes_historial(data.clientes_historial);
+        });
+
         return () => {
             newSocket.disconnect();
         }
@@ -42,6 +63,7 @@ export const useGlobal = () => {
 
     useEffect(() => {
         fetchProductos();
+        fetchClientes();
     }, []);
     return {
         shopName,
@@ -51,5 +73,7 @@ export const useGlobal = () => {
         productos,
         productos_historial,
         setProductos_historial,
+        clientes,
+        clientes_historial,
     };
 };
