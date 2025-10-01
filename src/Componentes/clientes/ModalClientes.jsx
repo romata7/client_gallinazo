@@ -4,9 +4,9 @@ import { Button, FloatingLabel, Form, Modal } from "react-bootstrap"
 import API_BASE_URL from "../../config"
 
 const default_data = {
-    nombre: "",
-    dirección: "",
-    celular: "",
+    name: "",
+    address: "",
+    phone: "",
 }
 
 const variant = {
@@ -19,6 +19,16 @@ const icon = {
     Registrar: `✔`,
     Modificar: `✎`,
     Eliminar: `✘`,
+}
+
+const regexPattens = {
+    name: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{0,100}$/,
+    phone: /^[0-9\s\+]{0,13}$/,
+}
+
+const errorsMessage = {
+    name: "Sin números, ni caracteres especiales",
+    phone: "Sin letras",
 }
 
 const procesar = {
@@ -35,10 +45,21 @@ export const ModalClientes = ({
 }) => {
     const [data, setData] = useState(initialData ? initialData : default_data);
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setData(prev => ({ ...prev, [name]: value }));
+        if (regexPattens[name]) {
+            if (regexPattens[name].test(value)) {
+                setData(prev => ({ ...prev, [name]: value }));
+                // Retiramos los errores
+                setErrors(prev => ({ ...prev, [name]: "" }));
+            } else {
+                setErrors(prev => ({ ...prev, [name]: errorsMessage[name] }));
+            }
+        } else {
+            setData(prev => ({ ...prev, [name]: value }));
+        }
     }
 
     const handleSubmit = async () => {
@@ -56,8 +77,10 @@ export const ModalClientes = ({
     useEffect(() => {
         if (show) {
             setData(initialData || default_data);
+            setErrors({});
         }
-    }, [show, initialData])
+    }, [show, initialData]);
+
     return (
         <Modal show={show} onHide={handleClose} size="sm" centered>
             <Modal.Header closeButton>
@@ -66,34 +89,43 @@ export const ModalClientes = ({
             <Modal.Body>
                 <fieldset disabled={operation === 'Eliminar'}
                     className="d-flex flex-column gap-2"
-
                 >
-                    <FloatingLabel controlId="nombre" label='Nombre'>
+                    <FloatingLabel controlId="name" label='Nombre'>
                         <Form.Control
                             type="text"
-                            name="nombre"
+                            name="name"
                             placeholder=""
-                            value={data.nombre}
+                            value={data.name}
+                            onChange={handleChange}
+                            isInvalid={!!errors.name}
+                            maxLength={100}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.name}
+                        </Form.Control.Feedback>
+                    </FloatingLabel>
+                    <FloatingLabel controlId="address" label="Dirección">
+                        <Form.Control
+                            type="text"
+                            name="address"
+                            placeholder=""
+                            value={data.address}
                             onChange={handleChange}
                         />
                     </FloatingLabel>
-                    <FloatingLabel controlId="dirección" label="Dirección">
+                    <FloatingLabel controlId="phone" label="Celular">
                         <Form.Control
                             type="text"
-                            name="dirección"
+                            name="phone"
                             placeholder=""
-                            value={data.dirección}
+                            value={data.phone}
                             onChange={handleChange}
+                            isInvalid={!!errors.phone}
+                            maxLength={13}
                         />
-                    </FloatingLabel>
-                    <FloatingLabel controlId="celular" label="Celular">
-                        <Form.Control
-                            type="text"
-                            name="celular"
-                            placeholder=""
-                            value={data.celular}
-                            onChange={handleChange}
-                        />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.phone}
+                        </Form.Control.Feedback>
                     </FloatingLabel>
                 </fieldset>
             </Modal.Body>
@@ -106,26 +138,14 @@ export const ModalClientes = ({
                     Cancelar
                 </Button>
 
-                {operation === 'Eliminar'
-                    ? <Button
-                        size="sm"
-                        variant={`${variant[operation]}`}
-                        onClick={handleSubmit}
-                        disabled={loading}
-                    >
-                        {loading ? "Procesando..." : `${icon[operation]} ${operation}`}
-                    </Button>
-                    : data.nombre !== "" && (
-                        <Button
-                            size="sm"
-                            variant={`${variant[operation]}`}
-                            onClick={handleSubmit}
-                            disabled={loading}
-                        >
-                            {loading ? "Procesando..." : `${icon[operation]} {operation}`}
-                        </Button>
-                    )
-                }
+                <Button
+                    size="sm"
+                    variant={variant[operation]}
+                    onClick={handleSubmit}
+                    disabled={!loading && operation !== "Eliminar" && data.name === ""}
+                >
+                    {icon[operation]} {operation}
+                </Button>
             </Modal.Footer>
         </Modal>
     )
