@@ -28,7 +28,7 @@ export const Clientes = ({
             <Button
                 size="sm"
                 variant="success"
-                onClick={() => abrirModal('Eliminar')}
+                onClick={() => abrirModal('Registrar')}
             >
                 + Agregar Cliente
             </Button>

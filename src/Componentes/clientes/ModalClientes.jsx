@@ -4,6 +4,7 @@ import { Button, FloatingLabel, Form, Modal } from "react-bootstrap"
 import API_BASE_URL from "../../config"
 
 const default_data = {
+    dniruc: "",
     name: "",
     address: "",
     phone: "",
@@ -22,11 +23,13 @@ const icon = {
 }
 
 const regexPattens = {
+    dniruc: /^[0-9]{0,11}$/,
     name: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{0,100}$/,
     phone: /^[0-9\s\+]{0,13}$/,
 }
 
 const errorsMessage = {
+    dniruc: "Solo números",
     name: "Sin números, ni caracteres especiales",
     phone: "Sin letras",
 }
@@ -90,6 +93,23 @@ export const ModalClientes = ({
                 <fieldset disabled={operation === 'Eliminar'}
                     className="d-flex flex-column gap-2"
                 >
+                    <FloatingLabel controlId="dniruc" label="D.N.I/R.U.C">
+                        <Form.Control
+                            type="text"
+                            name="dniruc"
+                            placeholder=""
+                            value={data.dniruc}
+                            onChange={handleChange}
+                            isInvalid={!!errors.dniruc}
+                            maxLength={11}
+                        />
+                        <Form.Text className="ms-2">
+                            {data.dniruc.length} dígitos, <b>máx: 11</b>
+                        </Form.Text>
+                        <Form.Control.Feedback type="invalid">
+                            {errors.dniruc}
+                        </Form.Control.Feedback>
+                    </FloatingLabel>
                     <FloatingLabel controlId="name" label='Nombre'>
                         <Form.Control
                             type="text"
