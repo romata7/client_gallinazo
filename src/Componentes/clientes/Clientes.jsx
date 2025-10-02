@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "react-bootstrap"
 import { ModalClientes } from "./ModalClientes";
-import { useGlobalContext } from "../../Contexts/GlobalContext";
 import { ListaClientes } from "./ListaClientes";
-import { io } from "socket.io-client";
-import API_BASE_URL from "../../config";
+import { useGlobalContext } from "../../Contexts/GlobalContext";
 
 const default_modal = {
     show: false,
@@ -16,7 +14,6 @@ export const Clientes = ({
 
 }) => {
     const { clientes, clientes_historial } = useGlobalContext();
-
     const [datosModal, setDatosModal] = useState(default_modal);
 
     const abrirModal = (operation, data = null) => {
@@ -29,7 +26,7 @@ export const Clientes = ({
     const cerrarModal = () => {
         setDatosModal(default_modal);
     }
-   
+
     return (
         <div className="justify-content-center">
             <Button
