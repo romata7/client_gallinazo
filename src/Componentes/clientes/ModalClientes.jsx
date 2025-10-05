@@ -102,6 +102,7 @@ export const ModalClientes = ({
                             onChange={handleChange}
                             isInvalid={!!errors.dniruc}
                             maxLength={11}
+                            autoFocus
                         />
                         <Form.Text className="ms-2">
                             {data.dniruc.length} dígitos, <b>máx: 11</b>

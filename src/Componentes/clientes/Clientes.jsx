@@ -3,6 +3,8 @@ import { Button } from "react-bootstrap"
 import { ModalClientes } from "./ModalClientes";
 import { ListaClientes } from "./ListaClientes";
 import { useGlobalContext } from "../../Contexts/GlobalContext";
+import axios from "axios";
+import API_BASE_URL from "../../config";
 
 const default_modal = {
     show: false,
@@ -26,6 +28,12 @@ export const Clientes = ({
     const cerrarModal = () => {
         setDatosModal(default_modal);
     }
+    const modificarCliente = (item) => {
+        abrirModal('Modificar', item);
+    }
+    const eliminarCliente = (item) => {
+        abrirModal('Eliminar', item);
+    }
 
     return (
         <div className="justify-content-center">
@@ -44,6 +52,8 @@ export const Clientes = ({
             />
             <ListaClientes
                 lista={clientes}
+                modificar={modificarCliente}
+                eliminar={eliminarCliente}
             />
         </div>
     )

@@ -16,7 +16,10 @@ export const useGlobal = () => {
     const [productos_historial, setProductos_historial] = useState([]);
 
     const [clientes, setClientes] = useState([]);
-    const [clientes_historial, setClientes_historial] = useState([])
+    const [clientes_historial, setClientes_historial] = useState([]);
+
+    const clientsSocket = useRef(null);
+    const productsSocket = useRef(null);
 
     const fetchProductos = async () => {
         try {
@@ -38,18 +41,30 @@ export const useGlobal = () => {
         }
     };
 
+    // Clientes
     useEffect(() => {
-        if (!socketRef.current) {
-            socketRef.current = io(API_BASE_URL);
-
-            socketRef.current.emit('join-clientes');
-            socketRef.current.on('clientes-actualizados', data => {
+        if (!clientsSocket.current) {
+            clientsSocket.current = io(API_BASE_URL);
+            clientsSocket.current.emit('join-clientes');
+            clientsSocket.current.on('clientes-actualizados', data => {
                 setClientes(data.clientes);
                 setClientes_historial(data.clientes_historial);
+            });
+        };
+        return () => {
+        }
+    }, []);
+
+    // Productos
+    useEffect(() => {
+        if (!productsSocket.current) {
+            productsSocket.current = io(API_BASE_URL);
+            productsSocket.current.emit('join-productos');
+            productsSocket.current.on('productos-actualizados', data => {
+                setProductos(data.productos);
+                setProductos_historial(data.productos_historial);
             })
         }
-
-        return () => { }
     }, [])
 
     useEffect(() => {

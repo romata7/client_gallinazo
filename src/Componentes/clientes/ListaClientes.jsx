@@ -1,7 +1,11 @@
 import { Alert, Button, Table } from "react-bootstrap"
 
 export const ListaClientes = ({
-    lista = []
+    lista = [],
+    subir,
+    bajar,
+    modificar,
+    eliminar,
 }) => {
     return (
         <div>
@@ -24,6 +28,7 @@ export const ListaClientes = ({
                                         size="sm"
                                         variant="outline-primary"
                                         className="px-1 py-0"
+                                        onClick={() => subir(item)}
                                     >
                                         ↑
                                     </Button>
@@ -31,6 +36,7 @@ export const ListaClientes = ({
                                         size="sm"
                                         variant="outline-secondary"
                                         className="px-1 py-0"
+                                        onClick={() => bajar(item)}
                                     >
                                         ↓
                                     </Button>
