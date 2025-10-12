@@ -81,5 +81,6 @@ export const useGlobal = () => {
         setProductos_historial,
         clientes,
         clientes_historial,
+        setClientes_historial,
     };
 };

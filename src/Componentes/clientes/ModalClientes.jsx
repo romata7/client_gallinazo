@@ -69,10 +69,10 @@ export const ModalClientes = ({
         setLoading(true);
         try {
             await procesar[operation](data);
-            handleClose();
         } catch (error) {
-            console.error(error);
+            console.error(error.response.data.error);
         } finally {
+            handleClose();
             setLoading(false);
         }
     }
