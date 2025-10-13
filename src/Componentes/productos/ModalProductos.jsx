@@ -6,8 +6,8 @@ import axios from "axios";
 import API_BASE_URL from "../../config";
 
 const default_data = {
-    name: "",
-    cost: "",
+    producto: "",
+    costo: "",
 }
 
 const variant = {
@@ -23,11 +23,11 @@ const icon = {
 }
 
 const regexPattens = {
-    cost: /^[0-9]{0,11}$/,
+    costo: /^[0-9]{0,11}$/,
 }
 
 const errorsMessage = {
-    cost: "Solo Números",
+    costo: "Solo Números",
 }
 
 const procesar = {
@@ -93,7 +93,7 @@ export const ModalProductos = ({
                             type="text"
                             name="name"
                             placeholder=""
-                            value={data.name}
+                            value={data.producto}
                             onChange={handleChange}
                             autoFocus
                         />
@@ -103,13 +103,13 @@ export const ModalProductos = ({
                             type="text"
                             name="cost"
                             placeholder=""
-                            value={data.cost}
+                            value={data.costo}
                             onChange={handleChange}
-                            isInvalid={!!errors.cost}
+                            isInvalid={!!errors.costo}
                             maxLength={11}
                         />
                         <Form.Control.Feedback type="invalid">
-                            {errors.cost}
+                            {errors.costo}
                         </Form.Control.Feedback>
                     </FloatingLabel>
                 </fieldset>

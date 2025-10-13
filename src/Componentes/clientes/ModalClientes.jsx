@@ -5,9 +5,9 @@ import API_BASE_URL from "../../config"
 
 const default_data = {
     dniruc: "",
-    name: "",
-    address: "",
-    phone: "",
+    cliente: "",
+    direccion: "",
+    telefono: "",
 }
 
 const variant = {
@@ -24,14 +24,14 @@ const icon = {
 
 const regexPattens = {
     dniruc: /^[0-9]{0,11}$/,
-    name: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{0,100}$/,
-    phone: /^[0-9\s\+]{0,13}$/,
+    cliente: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{0,100}$/,
+    telefono: /^[0-9\s\+]{0,13}$/,
 }
 
 const errorsMessage = {
     dniruc: "Solo números",
-    name: "Sin números, ni caracteres especiales",
-    phone: "Sin letras",
+    cliente: "Sin números, ni caracteres especiales",
+    telefono: "Sin letras",
 }
 
 const procesar = {
@@ -116,13 +116,13 @@ export const ModalClientes = ({
                             type="text"
                             name="name"
                             placeholder=""
-                            value={data.name}
+                            value={data.cliente}
                             onChange={handleChange}
-                            isInvalid={!!errors.name}
+                            isInvalid={!!errors.cliente}
                             maxLength={100}
                         />
                         <Form.Control.Feedback type="invalid">
-                            {errors.name}
+                            {errors.cliente}
                         </Form.Control.Feedback>
                     </FloatingLabel>
                     <FloatingLabel controlId="address" label="Dirección">
@@ -130,7 +130,7 @@ export const ModalClientes = ({
                             type="text"
                             name="address"
                             placeholder=""
-                            value={data.address}
+                            value={data.direccion}
                             onChange={handleChange}
                         />
                     </FloatingLabel>
@@ -139,16 +139,16 @@ export const ModalClientes = ({
                             type="text"
                             name="phone"
                             placeholder=""
-                            value={data.phone}
+                            value={data.telefono}
                             onChange={handleChange}
-                            isInvalid={!!errors.phone}
+                            isInvalid={!!errors.telefono}
                             maxLength={13}
                         />
                         <Form.Text className="ms-2">
-                            {data.phone.length} dígitos, <b>máx: 13</b>
+                            {data.telefono.length} dígitos, <b>máx: 13</b>
                         </Form.Text>
                         <Form.Control.Feedback type="invalid">
-                            {errors.phone}
+                            {errors.telefono}
                         </Form.Control.Feedback>
                     </FloatingLabel>
                 </fieldset>
@@ -166,7 +166,7 @@ export const ModalClientes = ({
                     size="sm"
                     variant={variant[operation]}
                     onClick={handleSubmit}
-                    disabled={!loading && operation !== "Eliminar" && data.name === ""}
+                    disabled={!loading && operation !== "Eliminar" && data.cliente === ""}
                 >
                     {icon[operation]} {operation}
                 </Button>

@@ -43,9 +43,9 @@ export const ListaClientes = ({
                                 </td>
                                 <td className="fw-bold">#{item.id}</td>
                                 <td>{item.dniruc}</td>
-                                <td>{item.name}</td>
-                                <td>{item.address}</td>
-                                <td>{item.phone}</td>
+                                <td>{item.cliente}</td>
+                                <td>{item.direccion}</td>
+                                <td>{item.telefono}</td>
                                 <td
                                     className="d-flex gap-2 justify-content-center"
                                 >

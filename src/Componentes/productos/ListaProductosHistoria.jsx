@@ -44,8 +44,8 @@ export const ListaProductosHistorial = ({
                                 <td className="fw-bold">#{item.id_producto}</td>
                                 <td className={`${variant[item.operacion]} text-center`}>{operacion[item.operacion]}</td>
                                 <td>{item.orden}</td>
-                                <td>{item.name}</td>
-                                <td className="text-end">S/{parseFloat(item.cost).toFixed(2)}</td>
+                                <td>{item.producto}</td>
+                                <td className="text-end">S/{parseFloat(item.costo).toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>

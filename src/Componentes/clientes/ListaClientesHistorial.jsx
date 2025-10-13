@@ -44,9 +44,9 @@ export const ListaClientesHistorial = ({
                                 <td className={`${variant[item.operacion]} text-center`}>{operacion[item.operacion]}</td>
                                 <td className="fw-bold">#{item.id_cliente}</td>
                                 <td>{item.dniruc}</td>
-                                <td>{item.name}</td>
-                                <td>{item.address}</td>
-                                <td>{item.phone}</td>
+                                <td>{item.cliente}</td>
+                                <td>{item.direccion}</td>
+                                <td>{item.telefono}</td>
                             </tr>
                         ))}
                     </tbody>
