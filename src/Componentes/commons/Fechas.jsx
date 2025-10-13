@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 
 export const Fechas = ({ fi = new Date(), ff = new Date(), procesar }) => {
@@ -38,7 +38,7 @@ export const Fechas = ({ fi = new Date(), ff = new Date(), procesar }) => {
     };
 
     return (
-        <div className="d-flex gap-2 justify-content-center">
+        <div className="d-flex gap-2 justify-content-center mb-2">
             <div className="d-flex gap-2">
                 <Button size="sm" variant="outline-primary" onClick={esteDia}>
                     Hoy

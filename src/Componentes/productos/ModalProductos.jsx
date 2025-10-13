@@ -1,99 +1,136 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useState } from "react"
 import { Button, FloatingLabel, Form, Modal } from "react-bootstrap"
 
+import axios from "axios";
+import API_BASE_URL from "../../config";
+
+const default_data = {
+    name: "",
+    cost: "",
+}
+
 const variant = {
-    "Registrar": "primary",
-    "Modificar": "warning",
-    "Eliminar": "danger"
+    Registrar: "success",
+    Modificar: "warning",
+    Eliminar: "danger",
 }
 
 const icon = {
-    "Registrar": `✔`,
-    "Modificar": `✎`,
-    "Eliminar": `✘`
+    Registrar: `✔`,
+    Modificar: `✎`,
+    Eliminar: `✘`,
 }
 
-const DEFAULT_DATA = {
-    producto: "",
-    costo: ""
+const regexPattens = {
+    cost: /^[0-9]{0,11}$/,
+}
+
+const errorsMessage = {
+    cost: "Solo Números",
+}
+
+const procesar = {
+    Registrar: async (data) => await axios.post(`${API_BASE_URL}/api/productos`, data),
+    Modificar: async (data) => await axios.put(`${API_BASE_URL}/api/productos/${data.id}`, data),
+    Eliminar: async (data) => await axios.delete(`${API_BASE_URL}/api/productos/${data.id}`),
 }
 
 export const ModalProductos = ({
-    operation,
     show,
     handleClose,
-    initialData = DEFAULT_DATA,
-    handleData,
+    initialData,
+    operation,
 }) => {
-    const [data, setData] = useState(initialData ? initialData : DEFAULT_DATA);
+    const [data, setData] = useState(initialData ? initialData : default_data);
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setData(prev => ({ ...prev, [name]: value }));
+        if (regexPattens[name]) {
+            if (regexPattens[name].test(value)) {
+                setData(prev => ({ ...prev, [name]: value }));
+                setErrors(prev => ({ ...prev, [name]: "" }));
+            } else {
+                setData(prev => ({ ...prev, [name]: value }));
+            }
+        } else {
+            setData(prev => ({ ...prev, [name]: value }));
+        }
+    }
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        try {
+            await procesar[operation](data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            handleClose();
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
         if (show) {
-            setData(initialData || DEFAULT_DATA);
+            setData(initialData || default_data);
+            setErrors({});
         }
-    }, [show, initialData])
+    }, [show, initialData]);
+
     return (
         <Modal show={show} onHide={handleClose} size="sm" centered>
             <Modal.Header closeButton>
                 <Modal.Title>{icon[operation]} {operation} Producto</Modal.Title>
             </Modal.Header>
-            <fieldset disabled={operation === "Eliminar"}>
-                <Modal.Body
+            <Modal.Body>
+                <fieldset disabled={operation === 'Eliminar'}
                     className="d-flex flex-column gap-2"
                 >
-                    <FloatingLabel controlId="producto" label="Productos">
+                    <FloatingLabel controlId="name" label="Nombre">
                         <Form.Control
                             type="text"
-                            name="producto"
-                            value={data.producto}
-                            onChange={handleChange}
+                            name="name"
                             placeholder=""
+                            value={data.name}
+                            onChange={handleChange}
                             autoFocus
                         />
                     </FloatingLabel>
-                    <FloatingLabel controlId="costo" label="Costo (S/)">
+                    <FloatingLabel controlId="cost" label="Costo">
                         <Form.Control
-                            type="number"
-                            step={0.01}
-                            name="costo"
-                            value={data.costo}
-                            onChange={handleChange}
+                            type="text"
+                            name="cost"
                             placeholder=""
+                            value={data.cost}
+                            onChange={handleChange}
+                            isInvalid={!!errors.cost}
+                            maxLength={11}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.cost}
+                        </Form.Control.Feedback>
                     </FloatingLabel>
-                </Modal.Body>
-            </fieldset>
+                </fieldset>
+            </Modal.Body>
             <Modal.Footer>
                 <Button
                     size="sm"
                     variant="secondary"
                     onClick={handleClose}
                 >
-                    Cerrar
+                    Cancelar
                 </Button>
-                {operation === "Registrar" || operation === "Modificar"
-                    ? data.producto !== "" && data.costo > 0 && (
-                        <Button
-                            size="sm"
-                            variant={variant[operation]}
-                            onClick={() => handleData(data)}
-                        >
-                            {icon[operation]} {operation}
-                        </Button>
-                    )
-                    : <Button
-                        size="sm"
-                        variant={variant[operation]}
-                        onClick={() => handleData(data)}
-                    >
-                        {icon[operation]} {operation}
-                    </Button>
-                }
+
+                <Button
+                    size="sm"
+                    variant={variant[operation]}
+                    onClick={handleSubmit}
+                    disabled={!loading && operation !== "Eliminar" && data.name === ""}
+                >
+                    {icon[operation]} {operation}
+                </Button>
             </Modal.Footer>
         </Modal>
     )

@@ -1,121 +1,91 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import { useGlobalContext } from "../../Contexts/GlobalContext"
 import axios from "axios";
+import API_BASE_URL from "../../config";
 import { Button } from "react-bootstrap";
 import { ModalProductos } from "./ModalProductos";
-import { useGlobalContext } from "../../Contexts/GlobalContext";
-import API_BASE_URL from "../../config";
 import { ListaProductos } from "./ListaProductos";
 import { ListaProductosHistorial } from "./ListaProductosHistoria";
 
-const estadoInicialModal = {
+const default_modal = {
   show: false,
-  operation: '',
-  initialData: null,
-};
+  operation: "",
+  data: null,
+}
 
-const operacionesAPI = {
-  Registrar: (data) => axios.post(`${API_BASE_URL}/api/productos`, data),
-  Modificar: (data) => axios.put(`${API_BASE_URL}/api/productos/${data.id}`, data),
-  Eliminar: (data) => axios.delete(`${API_BASE_URL}/api/productos/${data.id}`),
-};
+export const Productos = ({
 
-function Productos() {
+}) => {
   const { productos, productos_historial, setProductos_historial } = useGlobalContext();
+  const [datosModal, setDatosModal] = useState(default_modal);
 
-  const [estadoModal, setEstadoModal] = useState(estadoInicialModal);
-
-  const abrirModal = useCallback((operation, initialData = null) => {
-    setEstadoModal({
+  const abrirModal = (operation, data = null) => {
+    setDatosModal({
       show: true,
       operation,
-      initialData,
+      data,
     });
-  }, []);
+  }
 
-  const cerrarModal = useCallback(() => {
-    setEstadoModal(estadoInicialModal);
-  });
-
-  const manejarDataDeModal = useCallback(async (modalData) => {
+  const cerrarModal = () => {
+    setDatosModal(default_modal);
+  }
+  const modificarProducto = (item) => {
+    abrirModal('Modificar', item);
+  }
+  const eliminarProducto = (item) => {
+    abrirModal('Eliminar', item);
+  }
+  const subirOrdenProducto = async (item) => {
     try {
-      const operacion = operacionesAPI[estadoModal.operation];
-      if (operacion) {
-        await operacion(modalData)
-        cerrarModal();
-      }
+      await axios.post(`${API_BASE_URL}/api/productos/subir/${item.id}`);
     } catch (error) {
       console.error(error);
     }
-  }, [estadoModal.operation, cerrarModal]);
-
-  const accionesProductos = {
-    registrar: () => abrirModal('Registrar'),
-    modificar: (item) => abrirModal('Modificar', item),
-    eliminar: (item) => abrirModal('Eliminar', item),
-    subir: async (item) => {
-      try {
-        await axios.post(`${API_BASE_URL}/api/productos/subir`, { item });
-      } catch (error) {
-        console.error("Error al subir producto:", error);
-      }
-    },
-    bajar: async (item) => {
-      try {
-        await axios.post(`${API_BASE_URL}/api/productos/bajar`, { item });
-      } catch (error) {
-        console.error("Error al bajar producto:", error);
-      }
-    },
-  };
-
+  }
+  const bajarOrdenProducto = async (item) => {
+    try {
+      await axios.post(`${API_BASE_URL}/api/productos/bajar/${item.id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const procesar = async (fi, ff) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/productos/xfechas`, {
-        params: { fi, ff }
-      });
+      const response = await axios.get(`${API_BASE_URL}/api/productos/historial/${fi}/${ff}`);
       setProductos_historial(response.data);
     } catch (error) {
       console.error(error);
     }
   }
   return (
-    <div className="d-flex flex-column gap-2">
-      {/* Botón Agregar */}
-      <div className="d-flex justify-content-center align-items-center">
+    <div>
+      <div className="d-flex justify-content-center mb-2">
         <Button
           size="sm"
           variant="success"
-          className="d-flex align-items-center gap-1"
-          onClick={accionesProductos.registrar}
+          onClick={() => abrirModal('Registrar')}
         >
           + Agregar Producto
         </Button>
       </div>
-
-      {/* Lista de productos */}
+      <ModalProductos
+        show={datosModal.show}
+        handleClose={cerrarModal}
+        operation={datosModal.operation}
+        initialData={datosModal.data}
+      />
       <ListaProductos
         lista={productos}
-        subir={accionesProductos.subir}
-        bajar={accionesProductos.bajar}
-        modificar={accionesProductos.modificar}
-        eliminar={accionesProductos.eliminar}
+        modificar={modificarProducto}
+        eliminar={eliminarProducto}
+        subir={subirOrdenProducto}
+        bajar={bajarOrdenProducto}
       />
-
-      {/* Lista de productos historial */}
       <ListaProductosHistorial
         lista={productos_historial}
         procesar={procesar}
       />
-
-      <ModalProductos
-        show={estadoModal.show}
-        operation={estadoModal.operation}
-        initialData={estadoModal.initialData}
-        handleClose={cerrarModal}
-        handleData={manejarDataDeModal}
-      />
-    </div >
+    </div>
   );
 }
-
-export default Productos;

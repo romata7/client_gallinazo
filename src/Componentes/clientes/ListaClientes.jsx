@@ -41,7 +41,7 @@ export const ListaClientes = ({
                                         ↓
                                     </Button>
                                 </td>
-                                <td className="text-primary">#{item.orden}</td>
+                                <td className="fw-bold">#{item.id}</td>
                                 <td>{item.dniruc}</td>
                                 <td>{item.name}</td>
                                 <td>{item.address}</td>

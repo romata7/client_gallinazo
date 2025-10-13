@@ -1,7 +1,5 @@
 import { Alert, Table } from "react-bootstrap"
-import API_BASE_URL from "../../config"
 import { Fechas } from '../commons/Fechas'
-import axios from "axios"
 import { format } from "date-fns"
 
 const operacion = {
@@ -22,34 +20,32 @@ const variant = {
 export const ListaProductosHistorial = ({
     lista = [],
     procesar
-}) => {    
+}) => {
     return (
-        <div>
+        <div className="small">
             <Fechas
                 procesar={procesar}
             />
             {lista.length === 0 && (
-                <Alert>
-                    Sin datos...
-                </Alert>
+                <Alert>Sin datos...</Alert>
             )}
             {lista.length > 0 && (
                 <Table
-                    hover
-                    borderless
                     size="sm"
-                    className="small"
-                    responsive="sm"
+                    responsive
+                    borderless
+                    hover
                 >
                     <tbody>
                         {lista.map(item => (
                             <tr key={item.id}>
-                                <td className="text-nowrap text-muted text-center">{format(item.fecha, 'MM-dd HH:mm')}</td>
-                                <td className="text-primary fw-bold text-center">#{item.id}</td>
+                                <td>{item.id}</td>
+                                <td className="small text-muted text-nowrap">{format(item.fecha, 'yyyy-MM-dd HH:mm:ss')}</td>
+                                <td className="fw-bold">#{item.id_producto}</td>
                                 <td className={`${variant[item.operacion]} text-center`}>{operacion[item.operacion]}</td>
-                                <td className="text-nowrap">{item.producto}</td>
-                                <td className="text-success text-end">S/{parseFloat(item.costo).toFixed(2)}</td>
-                                <td className="text-muted text-center text-nowrap">Orden {item.orden}</td>
+                                <td>{item.orden}</td>
+                                <td>{item.name}</td>
+                                <td className="text-end">S/{parseFloat(item.cost).toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>

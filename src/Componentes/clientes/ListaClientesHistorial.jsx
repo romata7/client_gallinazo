@@ -1,5 +1,6 @@
 import { Alert, Table } from "react-bootstrap"
 import { Fechas } from "../commons/Fechas"
+import { format } from "date-fns"
 
 const operacion = {
     SUBE: '↑',
@@ -39,9 +40,9 @@ export const ListaClientesHistorial = ({
                         {lista.map(item => (
                             <tr key={item.id}>
                                 <td>{item.id}</td>
-                                <td className="small text-muted text-nowrap">{item.fecha}</td>
+                                <td className="small text-muted text-nowrap">{format(item.fecha, 'yyyy-MM-dd HH:mm:ss') }</td>
                                 <td className={`${variant[item.operacion]} text-center`}>{operacion[item.operacion]}</td>
-                                <td>{item.orden}</td>
+                                <td className="fw-bold">#{item.id_cliente}</td>
                                 <td>{item.dniruc}</td>
                                 <td>{item.name}</td>
                                 <td>{item.address}</td>

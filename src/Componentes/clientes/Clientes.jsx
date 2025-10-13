@@ -47,7 +47,7 @@ export const Clientes = ({
         try {
             await axios.post(`${API_BASE_URL}/api/clientes/bajar/${item.id}`);
         } catch (error) {
-            console.error(error);
+            console.error(error.response.data.error);
         }
     }
 
@@ -60,14 +60,16 @@ export const Clientes = ({
         }
     }
     return (
-        <div className="justify-content-center">
-            <Button
-                size="sm"
-                variant="success"
-                onClick={() => abrirModal('Registrar')}
-            >
-                + Agregar Cliente
-            </Button>
+        <div className="">
+            <div className="d-flex justify-content-center mb-2">
+                <Button
+                    size="sm"
+                    variant="success"
+                    onClick={() => abrirModal('Registrar')}
+                >
+                    + Agregar Cliente
+                </Button>
+            </div>
             <ModalClientes
                 show={datosModal.show}
                 handleClose={cerrarModal}

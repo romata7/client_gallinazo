@@ -42,9 +42,9 @@ export const ListaProductos = ({
                                         ↓
                                     </Button>
                                 </td>
-                                <td className="text-primary">#{item.orden}</td>
-                                <td className="text-nowrap"> {item.producto}</td>
-                                <td className="text-end text-success">S/{parseFloat(item.costo).toFixed(2)}</td>
+                                <td className="fw-bold">#{item.id}</td>
+                                <td className="text-nowrap"> {item.name}</td>
+                                <td className="text-end text-success">S/{parseFloat(item.cost).toFixed(2)}</td>
                                 <td
                                     className="d-flex gap-2 justify-content-center"
                                 >
