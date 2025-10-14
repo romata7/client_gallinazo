@@ -88,20 +88,20 @@ export const ModalProductos = ({
                 <fieldset disabled={operation === 'Eliminar'}
                     className="d-flex flex-column gap-2"
                 >
-                    <FloatingLabel controlId="name" label="Nombre">
+                    <FloatingLabel controlId="producto" label="Nombre">
                         <Form.Control
                             type="text"
-                            name="name"
+                            name="producto"
                             placeholder=""
                             value={data.producto}
                             onChange={handleChange}
                             autoFocus
                         />
                     </FloatingLabel>
-                    <FloatingLabel controlId="cost" label="Costo">
+                    <FloatingLabel controlId="costo" label="Costo">
                         <Form.Control
                             type="text"
-                            name="cost"
+                            name="costo"
                             placeholder=""
                             value={data.costo}
                             onChange={handleChange}

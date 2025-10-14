@@ -111,10 +111,10 @@ export const ModalClientes = ({
                             {errors.dniruc}
                         </Form.Control.Feedback>
                     </FloatingLabel>
-                    <FloatingLabel controlId="name" label='Nombre'>
+                    <FloatingLabel controlId="cliente" label='Nombre'>
                         <Form.Control
                             type="text"
-                            name="name"
+                            name="cliente"
                             placeholder=""
                             value={data.cliente}
                             onChange={handleChange}
@@ -125,19 +125,19 @@ export const ModalClientes = ({
                             {errors.cliente}
                         </Form.Control.Feedback>
                     </FloatingLabel>
-                    <FloatingLabel controlId="address" label="Dirección">
+                    <FloatingLabel controlId="direccion" label="Dirección">
                         <Form.Control
                             type="text"
-                            name="address"
+                            name="direccion"
                             placeholder=""
                             value={data.direccion}
                             onChange={handleChange}
                         />
                     </FloatingLabel>
-                    <FloatingLabel controlId="phone" label="Celular">
+                    <FloatingLabel controlId="telefono" label="Celular">
                         <Form.Control
                             type="text"
-                            name="phone"
+                            name="telefono"
                             placeholder=""
                             value={data.telefono}
                             onChange={handleChange}
