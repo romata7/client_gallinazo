@@ -94,7 +94,9 @@ export const ModalMozos = ({
                 <Modal.Title>{icon[operation]} {operation} Mozo</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <fieldset disabled={operation === "Eliminar"}>
+                <fieldset disabled={operation === "Eliminar"}
+                    className="d-flex flex-column gap-2"
+                >
                     <FloatingLabel controlId="dni" label="D.N.I">
                         <Form.Control
                             type="text"

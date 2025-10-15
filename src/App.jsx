@@ -4,7 +4,6 @@ import Navbar from "./Componentes/Navbar";
 import AgregarComanda from "./Componentes/AgregarComanda";
 import Todas_las_comandas from "./Componentes/Todas_las_comandas";
 import ComandasActivas from "./Componentes/ComandasActivas";
-import Tipos_pago from "./Componentes/Tipos_pago";
 import Resumen from "./Componentes/Resumen";
 import Gastos from "./Componentes/Gastos";
 import ProtectedRoute from "./Componentes/ProtectedRoute";
@@ -14,6 +13,7 @@ import { Clientes } from "./Componentes/clientes/Clientes";
 import { Productos } from "./Componentes/productos/Productos";
 import { Mesas } from "./Componentes/mesas/Mesas";
 import { Mozos } from "./Componentes/mozos/Mozos";
+import { Tipopagos } from "./Componentes/tipopagos/Tipopagos";
 
 function App() {
   const { password } = useGlobalContext();
@@ -79,7 +79,7 @@ function App() {
             path="/tipos_pago"
             element={
               <ProtectedRoute
-                component={Tipos_pago}
+                component={Tipopagos}
                 password={password}
                 enteredPassword={enteredPassword}
                 setEnteredPassword={setEnteredPassword}

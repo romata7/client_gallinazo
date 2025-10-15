@@ -22,10 +22,14 @@ export const useGlobal = () => {
     const [mozos, setMozos] = useState([]);
     const [mozos_historial, setMozos_historial] = useState([]);
 
+    const [tipopagos, setTipopagos] = useState([])
+    const [tipopagos_historial, setTipopagos_historial] = useState([])
+
     const clientsSocket = useRef(null);
     const productsSocket = useRef(null);
     const mesasSocket = useRef(null);
     const mozosSocket = useRef(null);
+    const tipopagosSocket = useRef(null);
 
     const fetchProductos = async () => {
         try {
@@ -64,6 +68,16 @@ export const useGlobal = () => {
             setMozos_historial(response.data.mozos_historial);
         } catch (error) {
             console.error('fetchMozos:', error);
+        }
+    }
+
+    const fetchTipopagos = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/tipopagos`);
+            setTipopagos(response.data.tipopagos);
+            setTipopagos_historial(response.data.tipopagos_historial);
+        } catch (error) {
+            console.error('fetchTipopagos:', error);
         }
     }
 
@@ -117,10 +131,24 @@ export const useGlobal = () => {
         }
     }, [])
 
+    // Tipopagos
+    useEffect(() => {
+        if (!tipopagosSocket.current) {
+            tipopagosSocket.current = io(API_BASE_URL);
+            tipopagosSocket.current.emit('join-tipopagos');
+            tipopagosSocket.current.on('tipopagos-actualizados', data => {
+                setTipopagos(data.tipopagos);
+                setTipopagos_historial(data.tipopagos_historial);
+            })
+        }
+    }, [])
+
     useEffect(() => {
         fetchProductos();
         fetchClientes();
         fetchMesas();
+        fetchMozos();
+        fetchTipopagos();
     }, []);
     return {
         shopName,
@@ -143,5 +171,9 @@ export const useGlobal = () => {
         mozos,
         mozos_historial,
         setMozos_historial,
+
+        tipopagos,
+        tipopagos_historial,
+        setTipopagos_historial,
     };
 };
