@@ -10,16 +10,22 @@ export const useGlobal = () => {
     const [password, setPassword] = useState("123");
     const [printDuplex, setPrintDuplex] = useState(false);
 
-    const socketRef = useRef(null);
-
     const [productos, setProductos] = useState([]);
     const [productos_historial, setProductos_historial] = useState([]);
 
     const [clientes, setClientes] = useState([]);
     const [clientes_historial, setClientes_historial] = useState([]);
 
+    const [mesas, setMesas] = useState([]);
+    const [mesas_historial, setMesas_historial] = useState([])
+
+    const [mozos, setMozos] = useState([]);
+    const [mozos_historial, setMozos_historial] = useState([]);
+
     const clientsSocket = useRef(null);
     const productsSocket = useRef(null);
+    const mesasSocket = useRef(null);
+    const mozosSocket = useRef(null);
 
     const fetchProductos = async () => {
         try {
@@ -40,6 +46,26 @@ export const useGlobal = () => {
             console.error(error);
         }
     };
+
+    const fetchMesas = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/mesas`);
+            setMesas(response.data.mesas);
+            setMesas_historial(response.data.mesas_historial);
+        } catch (error) {
+            console.error('fetchMesas:', error);
+        }
+    }
+
+    const fetchMozos = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/mozos`);
+            setMozos(response.data.mozos);
+            setMozos_historial(response.data.mozos_historial);
+        } catch (error) {
+            console.error('fetchMozos:', error);
+        }
+    }
 
     // Clientes
     useEffect(() => {
@@ -67,20 +93,55 @@ export const useGlobal = () => {
         }
     }, [])
 
+    // Mesas
+    useEffect(() => {
+        if (!mesasSocket.current) {
+            mesasSocket.current = io(API_BASE_URL);
+            mesasSocket.current.emit('join-mesas');
+            mesasSocket.current.on('mesas-actualizadas', data => {
+                setMesas(data.mesas);
+                setMesas_historial(data.mesas_historial);
+            })
+        }
+    }, [])
+
+    // Mozos
+    useEffect(() => {
+        if (!mozosSocket.current) {
+            mozosSocket.current = io(API_BASE_URL);
+            mozosSocket.current.emit('join-mozos');
+            mozosSocket.current.on('mozos-actualizados', data => {
+                setMozos(data.mozos);
+                setMozos_historial(data.mozos_historial);
+            })
+        }
+    }, [])
+
     useEffect(() => {
         fetchProductos();
         fetchClientes();
+        fetchMesas();
     }, []);
     return {
         shopName,
         shopFullName,
         password,
         printDuplex,
+
         productos,
         productos_historial,
         setProductos_historial,
+
         clientes,
         clientes_historial,
         setClientes_historial,
+
+        mesas,
+        mesas_historial,
+        setMesas_historial,
+
+        mozos,
+        mozos_historial,
+        setMozos_historial,
     };
 };

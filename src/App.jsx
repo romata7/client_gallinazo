@@ -4,8 +4,6 @@ import Navbar from "./Componentes/Navbar";
 import AgregarComanda from "./Componentes/AgregarComanda";
 import Todas_las_comandas from "./Componentes/Todas_las_comandas";
 import ComandasActivas from "./Componentes/ComandasActivas";
-import Mesas from "./Componentes/Mesas";
-import Mozos from "./Componentes/Mozos";
 import Tipos_pago from "./Componentes/Tipos_pago";
 import Resumen from "./Componentes/Resumen";
 import Gastos from "./Componentes/Gastos";
@@ -14,6 +12,8 @@ import DetallesCliente from "./Componentes/DetallesCliente";
 import { useGlobalContext } from "./Contexts/GlobalContext";
 import { Clientes } from "./Componentes/clientes/Clientes";
 import { Productos } from "./Componentes/productos/Productos";
+import { Mesas } from "./Componentes/mesas/Mesas";
+import { Mozos } from "./Componentes/mozos/Mozos";
 
 function App() {
   const { password } = useGlobalContext();

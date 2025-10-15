@@ -60,7 +60,7 @@ export const Clientes = ({
         }
     }
     return (
-        <div className="">
+        <div>
             <div className="d-flex justify-content-center mb-2">
                 <Button
                     size="sm"
