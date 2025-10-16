@@ -22,14 +22,18 @@ export const useGlobal = () => {
     const [mozos, setMozos] = useState([]);
     const [mozos_historial, setMozos_historial] = useState([]);
 
-    const [tipopagos, setTipopagos] = useState([])
-    const [tipopagos_historial, setTipopagos_historial] = useState([])
+    const [tipopagos, setTipopagos] = useState([]);
+    const [tipopagos_historial, setTipopagos_historial] = useState([]);
+
+    const [gastos, setGastos] = useState([]);
+    const [gastos_historial, setGastos_historial] = useState([]);
 
     const clientsSocket = useRef(null);
     const productsSocket = useRef(null);
     const mesasSocket = useRef(null);
     const mozosSocket = useRef(null);
     const tipopagosSocket = useRef(null);
+    const gastosSocket = useRef(null);
 
     const fetchProductos = async () => {
         try {
@@ -78,6 +82,16 @@ export const useGlobal = () => {
             setTipopagos_historial(response.data.tipopagos_historial);
         } catch (error) {
             console.error('fetchTipopagos:', error);
+        }
+    }
+
+    const fetchGastos = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/gastos`);
+            setGastos(response.data.gastos);
+            setGastos_historial(response.data.gastos_historial);
+        } catch (error) {
+            console.error('fetchGastos:', error);
         }
     }
 
@@ -143,12 +157,25 @@ export const useGlobal = () => {
         }
     }, [])
 
+    // Gastos
+    useEffect(() => {
+        if (!gastosSocket.current) {
+            gastosSocket.current = io(API_BASE_URL);
+            gastosSocket.current.emit('join-gastos');
+            gastosSocket.current.on('gastos-actualizados', data => {
+                setGastos(data.gastos);
+                setGastos_historial(data.gastos_historial);
+            })
+        }
+    }, []);
+
     useEffect(() => {
         fetchProductos();
         fetchClientes();
         fetchMesas();
         fetchMozos();
         fetchTipopagos();
+        fetchGastos();
     }, []);
     return {
         shopName,
@@ -175,5 +202,9 @@ export const useGlobal = () => {
         tipopagos,
         tipopagos_historial,
         setTipopagos_historial,
+
+        gastos,
+        gastos_historial,
+        setGastos_historial,
     };
 };

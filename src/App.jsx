@@ -1,21 +1,17 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./Componentes/Navbar";
-import AgregarComanda from "./Componentes/AgregarComanda";
-import Todas_las_comandas from "./Componentes/Todas_las_comandas";
-import ComandasActivas from "./Componentes/ComandasActivas";
-import Resumen from "./Componentes/Resumen";
-import Gastos from "./Componentes/Gastos";
 import ProtectedRoute from "./Componentes/ProtectedRoute";
-import DetallesCliente from "./Componentes/DetallesCliente";
 import { useGlobalContext } from "./Contexts/GlobalContext";
 import { Clientes } from "./Componentes/clientes/Clientes";
 import { Productos } from "./Componentes/productos/Productos";
 import { Mesas } from "./Componentes/mesas/Mesas";
 import { Mozos } from "./Componentes/mozos/Mozos";
 import { Tipopagos } from "./Componentes/tipopagos/Tipopagos";
+import { Gastos } from "./Componentes/gastos/Gastos";
+import { Home } from "./Componentes/home/Home";
 
-function App() {
+export const App = ({ }) => {
   const { password } = useGlobalContext();
   const [enteredPassword, setEnteredPassword] = useState("");
   return (
@@ -23,11 +19,11 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/comandas/activas" element={<ComandasActivas />} />
-          <Route path="/comandas/agregar" element={<AgregarComanda />} />
-          <Route path="/Inicio" element={<AgregarComanda />} />
-          <Route path="/comandas" element={<Todas_las_comandas />} />
-          <Route path="/detallescliente" element={<DetallesCliente />} />
+          <Route path="/comandas/activas" element={<Home />} />
+          <Route path="/comandas/agregar" element={<Home />} />
+          <Route path="/Inicio" element={<Home />} />
+          <Route path="/comandas" element={<Home />} />
+          <Route path="/detallescliente" element={<Home />} />
 
           {/* Rutas Protegidas */}
           <Route
@@ -88,14 +84,7 @@ function App() {
           />
           <Route
             path="/resumen"
-            element={
-              <ProtectedRoute
-                component={Resumen}
-                password={password}
-                enteredPassword={enteredPassword}
-                setEnteredPassword={setEnteredPassword}
-              />
-            }
+            element={<Home />}
           />
           <Route
             path="/gastos"
@@ -108,11 +97,9 @@ function App() {
               />
             }
           />
-          <Route path="/*" element={<AgregarComanda />} />
+          <Route path="/*" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </div>
   );
 }
-
-export default App;
