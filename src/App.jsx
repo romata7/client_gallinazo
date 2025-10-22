@@ -10,6 +10,7 @@ import { Mozos } from "./Componentes/mozos/Mozos";
 import { Tipopagos } from "./Componentes/tipopagos/Tipopagos";
 import { Gastos } from "./Componentes/gastos/Gastos";
 import { Home } from "./Componentes/home/Home";
+import { Comandas } from "./Componentes/comandas/Comandas";
 
 export const App = ({ }) => {
   const { password } = useGlobalContext();
@@ -19,9 +20,10 @@ export const App = ({ }) => {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          <Route path="/comandas/inicio" element={<Comandas />} />
           <Route path="/comandas/activas" element={<Home />} />
           <Route path="/comandas/agregar" element={<Home />} />
-          <Route path="/Inicio" element={<Home />} />
+          <Route path="/Inicio" element={<Comandas />} />
           <Route path="/comandas" element={<Home />} />
           <Route path="/detallescliente" element={<Home />} />
 
